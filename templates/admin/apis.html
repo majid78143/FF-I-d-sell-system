@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}API Management — Admin{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container">
+  <nav class="breadcrumb"><a href="{{ url_for('admin_dashboard') }}">Admin</a> / API Management</nav>
+  <h1 class="page-title">API Configurations</h1>
+  <p class="page-sub">All Free Fire tool APIs are configured here. The Discord bot reads these settings to make calls.</p>
+</div></section>
+<section class="section"><div class="container">
+
+  <!-- Add API form -->
+  {% if is_owner %}
+  <div class="admin-form-card">
+    <h3 class="afc-title">Add New API</h3>
+    <form method="POST" action="{{ url_for('admin_add_api') }}" class="admin-form">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Name</label><input type="text" name="name" class="form-input" placeholder="Free Fire Profile API" required /></div>
+        <div class="form-group"><label class="form-label">Tool Key</label>
+          <select name="tool" class="form-select">
+            <option value="profile">profile</option>
+            <option value="player_search">player_search</option>
+            <option value="guild_search">guild_search</option>
+            <option value="uid_info">uid_info</option>
+            <option value="region_check">region_check</option>
+            <option value="like_send">like_send</option>
+            <option value="id_visits">id_visits</option>
+            <option value="player_rankings">player_rankings</option>
+            <option value="ai_chat">ai_chat</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Method</label>
+          <select name="method" class="form-select"><option value="GET">GET</option><option value="POST">POST</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">URL</label><input type="text" name="url" class="form-input" placeholder="https://api.example.com/profile?uid={uid}&region={region}" required /></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Headers (JSON)</label><input type="text" name="headers" class="form-input" value="{}" placeholder='{"Authorization": "Bearer TOKEN"}' /></div>
+        <div class="form-group"><label class="form-label">Extra Params (JSON)</label><input type="text" name="params" class="form-input" value="{}" placeholder='{"key": "value"}' /></div>
+      </div>
+      <div class="form-group"><label class="form-label">Notes</label><input type="text" name="notes" class="form-input" placeholder="Optional notes about this API" /></div>
+      <button type="submit" class="btn btn-primary">Add API</button>
+    </form>
+  </div>
+  {% endif %}
+
+  <!-- Existing APIs -->
+  <div class="admin-table-wrap mt-lg">
+    <table class="admin-table">
+      <thead><tr><th>Name</th><th>Tool</th><th>URL</th><th>Method</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for api in apis %}
+        <tr>
+          <td><strong>{{ api.name }}</strong><br><small class="text-muted">{{ api.notes or '' }}</small></td>
+          <td><code>{{ api.tool }}</code></td>
+          <td class="td-url">{{ api.url | truncate(60) }}</td>
+          <td>{{ api.method }}</td>
+          <td><span class="badge {% if api.enabled %}badge-green{% else %}badge-red{% endif %}">{{ 'Active' if api.enabled else 'Off' }}</span></td>
+          <td class="td-actions">
+            {% if is_owner %}
+            <form method="POST" action="{{ url_for('admin_toggle_api', api_id=api.id) }}" style="display:inline"><button class="btn btn-xs btn-outline">{{ 'Disable' if api.enabled else 'Enable' }}</button></form>
+            <form method="POST" action="{{ url_for('admin_delete_api', api_id=api.id) }}" style="display:inline" onsubmit="return confirm('Delete this API?')"><button class="btn btn-xs btn-danger">Delete</button></form>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="td-empty">No APIs configured. Add the first one above.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="info-box mt-lg">
+    <h4>How API routing works</h4>
+    <p>Each tool key (e.g. <code>like_send</code>) maps to one enabled API config. When a user submits a tool request on the website, it is placed in the Firebase request queue. The Discord bot polls this queue, looks up the matching API config by tool key, makes the HTTP call, and writes the result back to Firebase. The website polls Firebase until the result appears.</p>
+    <p>Use <code>{uid}</code>, <code>{region}</code>, <code>{name}</code> etc. as URL placeholders — they are replaced with the actual request parameters.</p>
+  </div>
+</div></section>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Settings — Admin{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container">
+  <nav class="breadcrumb"><a href="{{ url_for('admin_dashboard') }}">Admin</a> / Settings</nav>
+  <h1 class="page-title">Platform Settings</h1>
+</div></section>
+<section class="section"><div class="container container-md">
+<form method="POST" class="admin-form">
+
+  <div class="admin-form-section">
+    <h3 class="afs-title">Like Sender</h3>
+    <div class="form-row">
+      <div class="form-group form-group-inline">
+        <label class="form-label">Enable Like Sender</label>
+        <label class="toggle"><input type="checkbox" name="like_sender_enabled" {% if settings.like_sender_enabled %}checked{% endif %} /><span class="toggle-slider"></span></label>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Global Daily Limit</label>
+        <input type="number" name="like_sender_daily_limit" class="form-input form-input-sm" min="1" max="9999" value="{{ settings.like_sender_daily_limit }}" />
+      </div>
+    </div>
+    <div class="form-group mt-sm">
+      <form method="POST" action="{{ url_for('admin_reset_likes') }}" style="display:inline">
+        <button type="submit" class="btn btn-outline btn-sm" onclick="return confirm('Reset today\'s like cache?')">Reset Today's Like Cache</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="admin-form-section">
+    <h3 class="afs-title">ID Visits</h3>
+    <div class="form-group form-group-inline">
+      <label class="form-label">Enable ID Visits</label>
+      <label class="toggle"><input type="checkbox" name="id_visits_enabled" {% if settings.id_visits_enabled %}checked{% endif %} /><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+
+  <div class="admin-form-section">
+    <h3 class="afs-title">AI Assistant</h3>
+    <div class="form-row">
+      <div class="form-group form-group-inline">
+        <label class="form-label">Enable AI</label>
+        <label class="toggle"><input type="checkbox" name="ai_enabled" {% if settings.ai_enabled %}checked{% endif %} /><span class="toggle-slider"></span></label>
+      </div>
+      <div class="form-group">
+        <label class="form-label">AI Provider</label>
+        <select name="ai_provider" class="form-select">
+          <option value="openai" {% if settings.ai_provider=='openai' %}selected{% endif %}>OpenAI</option>
+          <option value="anthropic" {% if settings.ai_provider=='anthropic' %}selected{% endif %}>Anthropic</option>
+          <option value="gemini" {% if settings.ai_provider=='gemini' %}selected{% endif %}>Google Gemini</option>
+          <option value="custom" {% if settings.ai_provider=='custom' %}selected{% endif %}>Custom</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">AI Model</label>
+        <input type="text" name="ai_model" class="form-input" value="{{ settings.ai_model }}" placeholder="gpt-3.5-turbo" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">System Prompt</label>
+      <textarea name="ai_prompt" class="form-textarea" rows="3">{{ settings.ai_prompt }}</textarea>
+    </div>
+  </div>
+
+  <div class="admin-form-section">
+    <h3 class="afs-title">Ads (Adsterra)</h3>
+    <div class="form-row">
+      <div class="form-group form-group-inline">
+        <label class="form-label">Enable Ads</label>
+        <label class="toggle"><input type="checkbox" name="ads_enabled" {% if settings.ads_enabled %}checked{% endif %} /><span class="toggle-slider"></span></label>
+      </div>
+      <div class="form-group form-group-inline">
+        <label class="form-label">Social Bar</label>
+        <label class="toggle"><input type="checkbox" name="ads_social_bar" {% if settings.ads_social_bar %}checked{% endif %} /><span class="toggle-slider"></span></label>
+      </div>
+      <div class="form-group form-group-inline">
+        <label class="form-label">Popup</label>
+        <label class="toggle"><input type="checkbox" name="ads_popup" {% if settings.ads_popup %}checked{% endif %} /><span class="toggle-slider"></span></label>
+      </div>
+      <div class="form-group form-group-inline">
+        <label class="form-label">Banner</label>
+        <label class="toggle"><input type="checkbox" name="ads_banner" {% if settings.ads_banner %}checked{% endif %} /><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Smart Link URL</label>
+      <input type="url" name="ads_smart_link" class="form-input" value="{{ settings.ads_smart_link }}" placeholder="https://..." />
+    </div>
+  </div>
+
+  <div class="admin-form-section">
+    <h3 class="afs-title">Site Control</h3>
+    <div class="form-row">
+      <div class="form-group form-group-inline">
+        <label class="form-label">Maintenance Mode</label>
+        <label class="toggle"><input type="checkbox" name="maintenance_mode" {% if settings.maintenance_mode %}checked{% endif %} /><span class="toggle-slider"></span></label>
+      </div>
+      <div class="form-group form-group-inline">
+        <label class="form-label">Registration Open</label>
+        <label class="toggle"><input type="checkbox" name="registration_open" {% if settings.registration_open %}checked{% endif %} /><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Save Settings</button>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">Cancel</a>
+  </div>
+</form>
+</div></section>
+{% endblock %}

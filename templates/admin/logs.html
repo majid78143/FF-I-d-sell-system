@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Logs — Admin{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container">
+  <nav class="breadcrumb"><a href="{{ url_for('admin_dashboard') }}">Admin</a> / Logs</nav>
+  <h1 class="page-title">Platform Logs</h1>
+</div></section>
+<section class="section"><div class="container">
+  <div class="log-tabs">
+    {% for cat in categories %}
+    <a href="{{ url_for('admin_logs', category=cat) }}" class="log-tab {% if cat==current_category %}active{% endif %}">{{ cat | title }}</a>
+    {% endfor %}
+  </div>
+  <div class="admin-table-wrap mt-md">
+    <table class="admin-table">
+      <thead><tr><th>Time</th><th>Data</th></tr></thead>
+      <tbody>
+        {% for log in logs %}
+        <tr>
+          <td class="log-ts">{{ log.ts or 0 }}</td>
+          <td class="log-data">
+            {% for k,v in log.items() %}{% if k not in ('id','ts') and v is not none %}
+            <span class="log-kv"><strong>{{ k }}</strong>: {{ v }}</span>
+            {% endif %}{% endfor %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="2" class="td-empty">No logs in this category.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div></section>
+{% endblock %}

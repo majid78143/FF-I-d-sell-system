@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Partners — Admin{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container">
+  <nav class="breadcrumb"><a href="{{ url_for('admin_dashboard') }}">Admin</a> / Partners</nav>
+  <h1 class="page-title">Manage Partners</h1>
+</div></section>
+<section class="section"><div class="container container-md">
+  <div class="admin-form-card">
+    <h3 class="afc-title">Add Partner Server</h3>
+    <form method="POST" class="admin-form">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Server Name</label><input type="text" name="name" class="form-input" required /></div>
+        <div class="form-group"><label class="form-label">Category</label>
+          <select name="category" class="form-select">
+            <option value="partner">Partner</option>
+            <option value="official">Official Support</option>
+            <option value="backup">Backup Support</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Description</label><textarea name="description" class="form-textarea" rows="2"></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Discord Invite Link</label><input type="url" name="invite_link" class="form-input" placeholder="https://discord.gg/..." required /></div>
+        <div class="form-group"><label class="form-label">Icon URL</label><input type="url" name="icon_url" class="form-input" placeholder="https://..." /></div>
+        <div class="form-group"><label class="form-label">Member Count</label><input type="number" name="member_count" class="form-input" value="0" min="0" /></div>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Partner</button>
+    </form>
+  </div>
+  <div class="admin-table-wrap mt-lg">
+    <table class="admin-table">
+      <thead><tr><th>Icon</th><th>Name</th><th>Category</th><th>Members</th><th>Invite</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for p in partners %}
+        <tr>
+          <td><img src="{{ p.icon_url or '' }}" class="table-icon" onerror="this.style.display='none'" /></td>
+          <td><strong>{{ p.name }}</strong><br><small>{{ p.description | truncate(50) }}</small></td>
+          <td><span class="badge badge-blue">{{ p.category | title }}</span></td>
+          <td>{{ p.member_count | default(0) }}</td>
+          <td><a href="{{ p.invite_link }}" target="_blank" class="btn btn-xs btn-outline">Join</a></td>
+          <td>
+            <form method="POST" action="{{ url_for('admin_delete_partner', pid=p.id) }}" onsubmit="return confirm('Remove this partner?')">
+              <button class="btn btn-xs btn-danger">Remove</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="td-empty">No partners added yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div></section>
+{% endblock %}

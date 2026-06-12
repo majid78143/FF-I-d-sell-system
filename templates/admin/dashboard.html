@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard — {{ branding.site_name }}{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container">
+  <h1 class="page-title">Admin Dashboard</h1>
+  <p class="page-sub">Platform overview and quick actions.</p>
+</div></section>
+<section class="section"><div class="container">
+
+  <!-- Stats row -->
+  <div class="admin-stats-row">
+    <div class="astat"><span class="astat-num">{{ stats.total_users }}</span><span class="astat-label">Users</span></div>
+    <div class="astat"><span class="astat-num">{{ stats.total_guilds }}</span><span class="astat-label">Guilds</span></div>
+    <div class="astat"><span class="astat-num">{{ stats.total_partners }}</span><span class="astat-label">Partners</span></div>
+    <div class="astat"><span class="astat-num">{{ stats.announcements }}</span><span class="astat-label">Announcements</span></div>
+    <div class="astat"><span class="astat-num">{{ stats.like_uses_today }}</span><span class="astat-label">Likes Today</span></div>
+  </div>
+
+  <!-- Quick nav -->
+  <div class="admin-nav-grid">
+    <a href="{{ url_for('admin_settings') }}" class="admin-nav-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <span>Settings</span>
+    </a>
+    <a href="{{ url_for('admin_branding') }}" class="admin-nav-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span>Branding</span>
+    </a>
+    <a href="{{ url_for('admin_users') }}" class="admin-nav-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      <span>Users</span>
+    </a>
+    <a href="{{ url_for('admin_apis') }}" class="admin-nav-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      <span>APIs</span>
+    </a>
+    <a href="{{ url_for('admin_announcements') }}" class="admin-nav-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span>Announcements</span>
+    </a>
+    <a href="{{ url_for('admin_partners') }}" class="admin-nav-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      <span>Partners</span>
+    </a>
+    <a href="{{ url_for('admin_logs') }}" class="admin-nav-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      <span>Logs</span>
+    </a>
+  </div>
+
+  <!-- Recent logs -->
+  {% if recent_logs %}
+  <div class="admin-section-header"><h3>Recent Activity</h3></div>
+  <div class="admin-log-list">
+    {% for log in recent_logs[:10] %}
+    <div class="admin-log-row">
+      <span class="log-ts"><{{ log.ts or 0 }}</span>
+      <span class="log-text">{{ log | tojson | truncate(120) }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+</div></section>
+{% endblock %}
