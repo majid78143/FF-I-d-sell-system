@@ -33,8 +33,8 @@ PORT  = int(os.environ.get("PORT", 5000))
 # ─── Default Branding (overridden by Firebase) ────────────────────────────────
 DEFAULT_BRANDING = {
     "site_name":      "FreeFire Hub",
-    "logo_url":       "https://i.supaimg.com/9ec0882f-b6ce-4a93-a2bd-61aad960c7c2/e044fa67-9028-4389-94ea-85ed63b81676.png",
-    "favicon_url":    "https://i.supaimg.com/9ec0882f-b6ce-4a93-a2bd-61aad960c7c2/e044fa67-9028-4389-94ea-85ed63b81676.png",
+    "logo_url":       "https://i.supaimg.com/9ec0882f-b6ce-4a93-a2bd-61aad960c7c2/f2301d04-9fb5-44da-8eb4-0a189525ca3e.png",
+    "favicon_url":    "https://i.supaimg.com/9ec0882f-b6ce-4a93-a2bd-61aad960c7c2/f2301d04-9fb5-44da-8eb4-0a189525ca3e.png",
     "footer_text":    "© 2025 FreeFire Hub. All rights reserved.",
     "primary_color":  "#0070f3",
     "secondary_color":"#7928ca",
