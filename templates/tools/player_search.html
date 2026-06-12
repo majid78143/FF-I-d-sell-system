@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Player Search — {{ branding.site_name }}{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container">
+  <nav class="breadcrumb"><a href="{{ url_for('tools') }}">Tools</a> / Player Search</nav>
+  <h1 class="page-title">Player Search</h1>
+  <p class="page-sub">Search any Free Fire player by nickname.</p>
+</div></section>
+<section class="section"><div class="container container-sm">
+  <div class="tool-form-card">
+    <form method="POST" class="tool-form">
+      <div class="form-group">
+        <label class="form-label">Player Nickname</label>
+        <input type="text" name="name" class="form-input" placeholder="Enter nickname…" required value="{{ request.form.name or '' }}" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Region</label>
+        <select name="region" class="form-select">
+          {% for r in regions %}<option value="{{ r }}" {% if request.form.get('region','IND')==r %}selected{% endif %}>{{ r }}</option>{% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Search Player</button>
+    </form>
+  </div>
+  {% if result %}
+  <div class="result-card">
+    {% if result.error %}<div class="result-error">{{ result.error }}</div>
+    {% else %}
+      {% if result.players %}
+        <div class="results-list">
+          {% for p in result.players %}
+          <div class="result-row">
+            <div class="rrow-info">
+              <span class="rrow-name">{{ p.nickname or p.name or 'Unknown' }}</span>
+              <span class="rrow-meta">UID: {{ p.uid or p.id or '?' }} — Level {{ p.level or '?' }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="result-stats-grid">
+          {% for k,v in result.items() %}{% if k!='error' and v is not none %}
+          <div class="pstat"><span class="pstat-label">{{ k|replace('_',' ')|title }}</span><span class="pstat-val">{{ v }}</span></div>
+          {% endif %}{% endfor %}
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+  {% endif %}
+</div></section>
+{% endblock %}

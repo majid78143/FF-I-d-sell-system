@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Region Checker — {{ branding.site_name }}{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container">
+  <nav class="breadcrumb"><a href="{{ url_for('tools') }}">Tools</a> / Region Checker</nav>
+  <h1 class="page-title">Region Checker</h1>
+  <p class="page-sub">Find which server region a UID is registered to.</p>
+</div></section>
+<section class="section"><div class="container container-sm">
+  <div class="tool-form-card">
+    <form method="POST" class="tool-form">
+      <div class="form-group">
+        <label class="form-label">Player UID</label>
+        <input type="text" name="uid" class="form-input" placeholder="e.g. 123456789" required pattern="[0-9]+" value="{{ request.form.uid or '' }}" />
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Check Region</button>
+    </form>
+  </div>
+  {% if result %}
+  <div class="result-card">
+    {% if result.error %}<div class="result-error">{{ result.error }}</div>
+    {% else %}
+    <div class="region-result">
+      <div class="region-flag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+      </div>
+      <div class="region-info">
+        <span class="region-label">Region</span>
+        <span class="region-name">{{ result.region or result.server or 'Unknown' }}</span>
+      </div>
+    </div>
+    <div class="profile-stats-grid">
+      {% for k,v in result.items() %}{% if k not in ('error','region','server') and v is not none %}
+      <div class="pstat"><span class="pstat-label">{{ k|replace('_',' ')|title }}</span><span class="pstat-val">{{ v }}</span></div>
+      {% endif %}{% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+</div></section>
+{% endblock %}

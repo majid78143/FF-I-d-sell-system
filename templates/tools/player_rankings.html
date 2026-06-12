@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Player Rankings — {{ branding.site_name }}{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container">
+  <nav class="breadcrumb"><a href="{{ url_for('tools') }}">Tools</a> / Player Rankings</nav>
+  <h1 class="page-title">Player Rankings</h1>
+  <p class="page-sub">Top Free Fire players across all regions — live data.</p>
+</div></section>
+<section class="section"><div class="container">
+  {% if result %}
+    {% if result.error %}
+    <div class="result-card"><div class="result-error">{{ result.error }}</div></div>
+    {% elif result.players %}
+    <div class="rankings-table-wrap">
+      <table class="rankings-table">
+        <thead><tr><th>#</th><th>Player</th><th>Level</th><th>Rank</th><th>Region</th></tr></thead>
+        <tbody>
+          {% for p in result.players %}
+          <tr class="rank-row {% if loop.index <= 3 %}rank-top{% endif %}">
+            <td class="rank-pos">
+              {% if loop.index==1 %}<span class="medal gold">1</span>
+              {% elif loop.index==2 %}<span class="medal silver">2</span>
+              {% elif loop.index==3 %}<span class="medal bronze">3</span>
+              {% else %}<span class="rank-num">{{ loop.index }}</span>{% endif %}
+            </td>
+            <td>{{ p.nickname or p.name or '—' }}</td>
+            <td>{{ p.level or '—' }}</td>
+            <td>{{ p.rank or '—' }}</td>
+            <td>{{ p.region or '—' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state"><p>No ranking data available. Configure the player_rankings API in the admin panel.</p></div>
+    {% endif %}
+  {% else %}
+  <div class="empty-state"><p>No ranking data. Configure the API and try again.</p></div>
+  {% endif %}
+</div></section>
+{% endblock %}

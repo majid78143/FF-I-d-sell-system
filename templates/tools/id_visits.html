@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}ID Visits — {{ branding.site_name }}{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container">
+  <nav class="breadcrumb"><a href="{{ url_for('tools') }}">Tools</a> / ID Visits</nav>
+  <h1 class="page-title">ID Visits</h1>
+  <p class="page-sub">Send profile visits to a Free Fire UID.</p>
+</div></section>
+<section class="section"><div class="container container-sm">
+  <div class="tool-form-card">
+    <form method="POST" class="tool-form">
+      <div class="form-group">
+        <label class="form-label">Player UID</label>
+        <input type="text" name="uid" class="form-input" placeholder="Enter Free Fire UID" required pattern="[0-9]+" value="{{ request.form.uid or '' }}" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Region</label>
+        <select name="region" class="form-select">
+          {% for r in regions %}<option value="{{ r }}" {% if request.form.get('region','IND')==r %}selected{% endif %}>{{ r }}</option>{% endfor %}
+        </select>
+      </div>
+      {% if error %}<div class="form-error">{{ error }}</div>{% endif %}
+      <button type="submit" class="btn btn-primary btn-full" {% if not settings.id_visits_enabled %}disabled{% endif %}>
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Send Visits
+      </button>
+      {% if not settings.id_visits_enabled %}<p class="form-note">ID Visits is currently disabled.</p>{% endif %}
+    </form>
+  </div>
+  {% if result %}
+  <div class="result-card">
+    {% if result.error %}<div class="result-error">{{ result.error }}</div>
+    {% else %}
+    <div class="result-success">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      Visits sent successfully!
+    </div>
+    <div class="profile-stats-grid">
+      {% for k,v in result.items() %}{% if k!='error' and v is not none %}
+      <div class="pstat"><span class="pstat-label">{{ k|replace('_',' ')|title }}</span><span class="pstat-val">{{ v }}</span></div>
+      {% endif %}{% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+</div></section>
+{% endblock %}

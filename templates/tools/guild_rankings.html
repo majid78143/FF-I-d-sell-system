@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Guild Rankings — {{ branding.site_name }}{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container">
+  <nav class="breadcrumb"><a href="{{ url_for('tools') }}">Tools</a> / Guild Rankings</nav>
+  <h1 class="page-title">Guild Rankings</h1>
+  <p class="page-sub">Top guilds registered on our platform, ranked by member count.</p>
+</div></section>
+<section class="section"><div class="container">
+  {% if guilds %}
+  <div class="rankings-table-wrap">
+    <table class="rankings-table">
+      <thead><tr><th>#</th><th>Guild</th><th>Members</th><th>Owner</th><th></th></tr></thead>
+      <tbody>
+        {% for guild in guilds %}
+        <tr class="rank-row {% if loop.index <= 3 %}rank-top{% endif %}">
+          <td class="rank-pos">
+            {% if loop.index == 1 %}<span class="medal gold">1</span>
+            {% elif loop.index == 2 %}<span class="medal silver">2</span>
+            {% elif loop.index == 3 %}<span class="medal bronze">3</span>
+            {% else %}<span class="rank-num">{{ loop.index }}</span>{% endif %}
+          </td>
+          <td class="rank-guild">
+            <img src="{{ guild.icon_url or '' }}" alt="{{ guild.name }}" class="rank-icon" onerror="this.style.display='none'" />
+            <span>{{ guild.name }}</span>
+          </td>
+          <td>{{ guild.member_count | default(0) }}</td>
+          <td>{{ guild.owner_id or '—' }}</td>
+          <td><a href="{{ url_for('guild_detail', guild_id=guild.id) }}" class="btn btn-outline btn-xs">View</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+    <p>No guilds registered yet.</p>
+  </div>
+  {% endif %}
+</div></section>
+{% endblock %}
