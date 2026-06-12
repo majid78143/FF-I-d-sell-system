@@ -469,9 +469,10 @@ async def cmd_permission(interaction: discord.Interaction):
 
 # ─── Permission helpers ───────────────────────────────────────────────────────
 
+OWNER_ID = "1464697383467356316"
+
 async def _is_owner(interaction: discord.Interaction) -> bool:
-    user = db.get_user_by_discord(str(interaction.user.id))
-    return user is not None and user.get("role") == "owner"
+    return str(interaction.user.id) == OWNER_ID
 
 
 async def _is_admin(interaction: discord.Interaction) -> bool:
