@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ guild.name }} — {{ branding.site_name }}{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container">
+  <nav class="breadcrumb"><a href="{{ url_for('guilds_page') }}">Guilds</a> / {{ guild.name }}</nav>
+  <div class="guild-detail-header">
+    <img src="{{ guild.icon_url or '' }}" alt="{{ guild.name }}" class="guild-detail-icon" onerror="this.style.display='none'" />
+    <div>
+      <h1 class="page-title">{{ guild.name }}</h1>
+      <div class="guild-detail-tags">
+        <span class="badge badge-blue">{{ guild.member_count | default(0) }} Members</span>
+        {% if guild.level %}<span class="badge badge-purple">Level {{ guild.level }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+</div></section>
+<section class="section"><div class="container container-sm">
+  <div class="result-card">
+    <div class="profile-stats-grid">
+      {% for k,v in guild.items() %}{% if k not in ('id','icon_url','name') and v is not none %}
+      <div class="pstat"><span class="pstat-label">{{ k|replace('_',' ')|title }}</span><span class="pstat-val">{{ v }}</span></div>
+      {% endif %}{% endfor %}
+    </div>
+  </div>
+</div></section>
+{% endblock %}

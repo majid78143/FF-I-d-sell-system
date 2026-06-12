@@ -1,0 +1,347 @@
+{% extends "base.html" %}
+{% block title %}{{ branding.site_name }} — Free Fire Services{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-particles" id="particles"></div>
+  </div>
+  <div class="hero-inner container">
+    <div class="hero-badge">Free Fire Platform</div>
+    <h1 class="hero-title">
+      The Ultimate<br>
+      <span class="gradient-text">Free Fire Hub</span>
+    </h1>
+    <p class="hero-sub">
+      Profile lookups, like sender, guild rankings, AI assistant and more —
+      all powered by a real-time Discord bot engine.
+    </p>
+    <div class="hero-actions">
+      <a href="{{ url_for('tools') }}" class="btn btn-primary btn-lg">Explore Tools</a>
+      <a href="{{ url_for('support_page') }}" class="btn btn-outline btn-lg">Join Support</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat">
+        <span class="hstat-num" data-count="{{ stats.total_users }}">0</span>
+        <span class="hstat-label">Users</span>
+      </div>
+      <div class="hstat">
+        <span class="hstat-num" data-count="{{ stats.total_guilds }}">0</span>
+        <span class="hstat-label">Guilds</span>
+      </div>
+      <div class="hstat">
+        <span class="hstat-num" data-count="{{ stats.total_partners }}">0</span>
+        <span class="hstat-label">Partners</span>
+      </div>
+      <div class="hstat">
+        <span class="hstat-num" data-count="{{ stats.like_uses_today }}">0</span>
+        <span class="hstat-label">Likes Today</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Announcements Slider -->
+{% if announcements %}
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Latest Announcements</h2>
+      <a href="{{ url_for('announcements_page') }}" class="section-link">View all</a>
+    </div>
+    <div class="ann-slider" id="annSlider">
+      {% for ann in announcements %}
+      <div class="ann-card ann-{{ ann.type }}">
+        <div class="ann-meta">
+          <span class="ann-badge ann-badge-{{ ann.type }}">{{ ann.type | upper }}</span>
+          <span class="ann-author">{{ ann.author }}</span>
+        </div>
+        <h3 class="ann-title">{{ ann.title }}</h3>
+        <p class="ann-content">{{ ann.content }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- API Status -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Platform Status</h2>
+    </div>
+    <div class="status-grid">
+      <div class="status-card" id="sc-bot">
+        <div class="status-dot status-dot-checking"></div>
+        <span class="status-name">Discord Bot</span>
+        <span class="status-val" id="sv-bot">Checking...</span>
+      </div>
+      <div class="status-card" id="sc-db">
+        <div class="status-dot status-dot-checking"></div>
+        <span class="status-name">Database</span>
+        <span class="status-val" id="sv-db">Checking...</span>
+      </div>
+      <div class="status-card">
+        <div class="status-dot status-dot-green"></div>
+        <span class="status-name">Like Sender</span>
+        <span class="status-val">{{ "Active" if settings.like_sender_enabled else "Disabled" }}</span>
+      </div>
+      <div class="status-card">
+        <div class="status-dot status-dot-green"></div>
+        <span class="status-name">AI Assistant</span>
+        <span class="status-val">{{ "Active" if settings.ai_enabled else "Disabled" }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Popular Tools -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Popular Tools</h2>
+      <a href="{{ url_for('tools') }}" class="section-link">All tools</a>
+    </div>
+    <div class="tools-grid">
+      <a href="{{ url_for('tool_profile') }}" class="tool-card">
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="tool-info">
+          <h3 class="tool-name">Profile Lookup</h3>
+          <p class="tool-desc">View any player's full profile and stats</p>
+        </div>
+        <svg class="tool-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="{{ url_for('tool_like_sender') }}" class="tool-card tool-card-featured">
+        <div class="tool-badge">Popular</div>
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </div>
+        <div class="tool-info">
+          <h3 class="tool-name">Like Sender</h3>
+          <p class="tool-desc">Send likes to any Free Fire profile</p>
+        </div>
+        <svg class="tool-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="{{ url_for('tool_guild_search') }}" class="tool-card">
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div class="tool-info">
+          <h3 class="tool-name">Guild Search</h3>
+          <p class="tool-desc">Search and explore any guild</p>
+        </div>
+        <svg class="tool-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="{{ url_for('tool_id_visits') }}" class="tool-card">
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <div class="tool-info">
+          <h3 class="tool-name">ID Visits</h3>
+          <p class="tool-desc">Send visits to a player's profile</p>
+        </div>
+        <svg class="tool-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="{{ url_for('tool_uid_info') }}" class="tool-card">
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div class="tool-info">
+          <h3 class="tool-name">UID Information</h3>
+          <p class="tool-desc">Detailed info from a player UID</p>
+        </div>
+        <svg class="tool-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="{{ url_for('tool_region_checker') }}" class="tool-card">
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        </div>
+        <div class="tool-info">
+          <h3 class="tool-name">Region Checker</h3>
+          <p class="tool-desc">Find which region a UID belongs to</p>
+        </div>
+        <svg class="tool-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Top Guilds -->
+{% if guilds %}
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Top Guilds</h2>
+      <a href="{{ url_for('guilds_page') }}" class="section-link">View all</a>
+    </div>
+    <div class="guilds-grid">
+      {% for guild in guilds[:6] %}
+      <a href="{{ url_for('guild_detail', guild_id=guild.id) }}" class="guild-card">
+        <img src="{{ guild.icon_url or '' }}" alt="{{ guild.name }}" class="guild-icon" onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 40 40\'><rect width=\'40\' height=\'40\' rx=\'8\' fill=\'%230070f3\'/><text x=\'50%25\' y=\'55%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-size=\'18\' fill=\'white\'>{{ guild.name[0] | upper }}</text></svg>'" />
+        <div class="guild-info">
+          <span class="guild-name">{{ guild.name }}</span>
+          <span class="guild-members">{{ guild.member_count | default(0) }} members</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Partners -->
+{% if partners %}
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Partner Servers</h2>
+      <a href="{{ url_for('partners_page') }}" class="section-link">All partners</a>
+    </div>
+    <div class="partners-grid">
+      {% for p in partners[:4] %}
+      <div class="partner-card">
+        <img src="{{ p.icon_url or '' }}" alt="{{ p.name }}" class="partner-icon" onerror="this.style.display='none'" />
+        <div class="partner-info">
+          <h3 class="partner-name">{{ p.name }}</h3>
+          <p class="partner-desc">{{ p.description }}</p>
+          <span class="partner-members">{{ p.member_count | default(0) }} members</span>
+        </div>
+        <a href="{{ p.invite_link }}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">Join</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Support Servers -->
+{% if support_servers %}
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Support Servers</h2>
+    </div>
+    <div class="support-grid">
+      {% for sv in support_servers %}
+      <div class="support-card">
+        <img src="{{ sv.icon_url or '' }}" alt="{{ sv.name }}" class="support-icon" onerror="this.style.display='none'" />
+        <div class="support-info">
+          <h3 class="support-name">{{ sv.name }}</h3>
+          <p class="support-desc">{{ sv.description }}</p>
+          <div class="support-tags">
+            {% if sv.category == "official" %}<span class="badge badge-blue">Official</span>{% endif %}
+            {% if sv.category == "backup" %}<span class="badge badge-gray">Backup</span>{% endif %}
+          </div>
+        </div>
+        <a href="{{ sv.invite_link }}" target="_blank" rel="noopener" class="btn btn-primary btn-sm">Join Discord</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Features -->
+<section class="section">
+  <div class="container">
+    <div class="section-header center">
+      <h2 class="section-title">Why Choose Us</h2>
+      <p class="section-sub">Everything you need to dominate Free Fire, in one place.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>Real-Time Results</h3>
+        <p>All requests are processed through our live Discord bot engine in seconds.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Secure & Reliable</h3>
+        <p>APIs are managed server-side. Your requests are never exposed to the client.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 10h8M8 14h5"/></svg>
+        </div>
+        <h3>AI Assistant</h3>
+        <p>Get instant answers about Free Fire strategies, updates, and character builds.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3>Live Stats</h3>
+        <p>Profile stats, guild rankings and player rankings updated in real time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header center">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q">How does the Like Sender work?</button>
+        <div class="faq-a">Enter your Free Fire UID and region. Our bot processes the request and sends likes to your profile. There is a global daily limit to prevent abuse.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Is this affiliated with Garena?</button>
+        <div class="faq-a">No. This is a third-party fan service and is not affiliated with or endorsed by Garena or Free Fire.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">How do I become a partner server?</button>
+        <div class="faq-a">Join our support server and open a partnership request. Our team will review your application.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Why is the API result delayed?</button>
+        <div class="faq-a">Requests go through our Discord bot for security. Processing usually takes 1–5 seconds depending on bot load.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Can I use the AI assistant for Free Fire advice?</button>
+        <div class="faq-a">Yes! Our AI assistant is tuned for Free Fire and can answer questions about characters, weapons, strategies, and more.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/animations.js') }}"></script>
+<script>
+  // Status check
+  fetch('/api/stats').then(r=>r.json()).then(d=>{
+    document.getElementById('sv-db').textContent = 'Online';
+    document.getElementById('sc-db').querySelector('.status-dot').className='status-dot status-dot-green';
+  }).catch(()=>{
+    document.getElementById('sv-db').textContent = 'Degraded';
+  });
+
+  // Assume bot is online if queue is working
+  document.getElementById('sv-bot').textContent = 'Online';
+  document.getElementById('sc-bot').querySelector('.status-dot').className='status-dot status-dot-green';
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+      if(!isOpen) item.classList.add('open');
+    });
+  });
+</script>
+{% endblock %}

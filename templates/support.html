@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Support — {{ branding.site_name }}{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container">
+  <h1 class="page-title">Support Servers</h1>
+  <p class="page-sub">Get help, report issues, or just hang out in our official Discord servers.</p>
+</div></section>
+<section class="section"><div class="container container-md">
+  {% if support_servers %}
+  <div class="support-full-grid">
+    {% for sv in support_servers %}
+    <div class="support-full-card">
+      <img src="{{ sv.icon_url or '' }}" alt="{{ sv.name }}" class="support-full-icon" onerror="this.style.display='none'" />
+      <div class="support-full-body">
+        <div class="support-full-header">
+          <h3 class="support-full-name">{{ sv.name }}</h3>
+          <div class="support-full-tags">
+            {% if sv.category == "official" %}<span class="badge badge-blue">Official</span>{% endif %}
+            {% if sv.category == "backup" %}<span class="badge badge-gray">Backup</span>{% endif %}
+          </div>
+        </div>
+        <p class="support-full-desc">{{ sv.description }}</p>
+        {% if sv.member_count %}<span class="support-full-members">{{ sv.member_count }} members</span>{% endif %}
+      </div>
+      <a href="{{ sv.invite_link }}" target="_blank" rel="noopener" class="btn btn-primary btn-lg">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Join Discord
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <p>Support server details not configured yet. Add them via the Discord bot.</p>
+  </div>
+  {% endif %}
+
+  <div class="info-box mt-lg">
+    <h4>Need help?</h4>
+    <p>For account issues, tool problems, or partnership inquiries — join one of our official Discord servers above and open a ticket. Our team responds promptly.</p>
+  </div>
+</div></section>
+{% endblock %}

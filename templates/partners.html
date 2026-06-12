@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Partners — {{ branding.site_name }}{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container">
+  <h1 class="page-title">Partner Servers</h1>
+  <p class="page-sub">Official partner and support Discord servers affiliated with {{ branding.site_name }}.</p>
+</div></section>
+<section class="section"><div class="container">
+  {% if partners %}
+  <div class="partners-full-grid">
+    {% for p in partners %}
+    <div class="partner-full-card">
+      <img src="{{ p.icon_url or '' }}" alt="{{ p.name }}" class="partner-full-icon" onerror="this.style.display='none'" />
+      <div class="partner-full-body">
+        <h3 class="partner-full-name">{{ p.name }}</h3>
+        <p class="partner-full-desc">{{ p.description }}</p>
+        <div class="partner-full-meta">
+          <span class="badge badge-gray">{{ p.member_count | default(0) }} members</span>
+          {% if p.category %}<span class="badge badge-blue">{{ p.category | title }}</span>{% endif %}
+        </div>
+      </div>
+      <a href="{{ p.invite_link }}" target="_blank" rel="noopener" class="btn btn-primary">Join Server</a>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+    <p>No partner servers listed yet.</p>
+  </div>
+  {% endif %}
+</div></section>
+{% endblock %}

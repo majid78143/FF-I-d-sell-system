@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Guilds — {{ branding.site_name }}{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container">
+  <h1 class="page-title">Guild Directory</h1>
+  <p class="page-sub">Explore all Free Fire guilds registered on {{ branding.site_name }}.</p>
+</div></section>
+<section class="section"><div class="container">
+  <div class="search-bar-wrap">
+    <input type="text" id="guildSearch" class="search-bar" placeholder="Search guilds by name…" />
+  </div>
+  {% if guilds %}
+  <div class="guilds-full-grid" id="guildGrid">
+    {% for g in guilds %}
+    <a href="{{ url_for('guild_detail', guild_id=g.id) }}" class="guild-full-card" data-name="{{ g.name | lower }}">
+      <img src="{{ g.icon_url or '' }}" alt="{{ g.name }}" class="guild-full-icon" onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 60 60\'><rect width=\'60\' height=\'60\' rx=\'10\' fill=\'%230070f3\'/><text x=\'50%25\' y=\'55%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-size=\'26\' fill=\'white\'>{{ g.name[0]|upper }}</text></svg>'" />
+      <div class="guild-full-info">
+        <h3 class="guild-full-name">{{ g.name }}</h3>
+        <span class="guild-full-meta">{{ g.member_count | default(0) }} members</span>
+      </div>
+      <svg class="tfc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+    <p>No guilds registered yet. Add the bot to your Discord server to register.</p>
+  </div>
+  {% endif %}
+</div></section>
+{% endblock %}
+{% block scripts %}
+<script>
+  const input = document.getElementById('guildSearch');
+  input && input.addEventListener('input', () => {
+    const q = input.value.toLowerCase();
+    document.querySelectorAll('.guild-full-card').forEach(c => {
+      c.style.display = c.dataset.name.includes(q) ? '' : 'none';
+    });
+  });
+</script>
+{% endblock %}

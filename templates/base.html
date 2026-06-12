@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}{{ branding.site_name }}{% endblock %}</title>
+  <link rel="icon" type="image/png" href="{{ branding.favicon_url }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+  <style>
+    :root {
+      --color-primary:   {{ branding.primary_color }};
+      --color-secondary: {{ branding.secondary_color }};
+    }
+  </style>
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="{{ url_for('index') }}" class="nav-brand">
+      <img src="{{ branding.logo_url }}" alt="{{ branding.site_name }} logo" class="nav-logo" onerror="this.style.display='none'" />
+      <span class="nav-name">{{ branding.site_name }}</span>
+    </a>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="6"  x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint=='index' %}active{% endif %}">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Home
+      </a></li>
+      <li><a href="{{ url_for('tools') }}" class="nav-link {% if 'tool' in (request.endpoint or '') %}active{% endif %}">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        Tools
+      </a></li>
+      <li><a href="{{ url_for('guilds_page') }}" class="nav-link {% if request.endpoint=='guilds_page' %}active{% endif %}">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Guilds
+      </a></li>
+      <li><a href="{{ url_for('partners_page') }}" class="nav-link {% if request.endpoint=='partners_page' %}active{% endif %}">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Partners
+      </a></li>
+      <li><a href="{{ url_for('announcements_page') }}" class="nav-link {% if request.endpoint=='announcements_page' %}active{% endif %}">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        Announcements
+      </a></li>
+      <li><a href="{{ url_for('support_page') }}" class="nav-link {% if request.endpoint=='support_page' %}active{% endif %}">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Support
+      </a></li>
+      <li><a href="{{ url_for('aichat') }}" class="nav-link {% if request.endpoint=='aichat' %}active{% endif %}">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 10h8M8 14h5"/></svg>
+        AI Assistant
+      </a></li>
+
+      {% if logged_in %}
+        {% if is_admin %}
+        <li><a href="{{ url_for('admin_dashboard') }}" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Admin
+        </a></li>
+        {% endif %}
+        <li>
+          <a href="{{ url_for('logout') }}" class="nav-link nav-logout">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Logout
+          </a>
+        </li>
+      {% else %}
+        <li><a href="{{ url_for('login') }}" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          Login
+        </a></li>
+        <li><a href="{{ url_for('register') }}" class="btn btn-primary btn-sm">Register</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
+
+<!-- Flash messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for cat, msg in messages %}
+        <div class="flash flash-{{ cat }}">
+          <span>{{ msg }}</span>
+          <button onclick="this.parentElement.remove()" class="flash-close">&times;</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- Main content -->
+<main class="main-content">
+  {% block content %}{% endblock %}
+</main>
+
+<!-- AI Float Button -->
+{% if settings.ai_enabled %}
+<a href="{{ url_for('aichat') }}" class="ai-float-btn" title="AI Assistant">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 10h8M8 14h5"/></svg>
+</a>
+{% endif %}
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="{{ branding.logo_url }}" alt="logo" class="footer-logo" onerror="this.style.display='none'" />
+      <span>{{ branding.site_name }}</span>
+    </div>
+    <div class="footer-links">
+      <a href="{{ url_for('tools') }}">Tools</a>
+      <a href="{{ url_for('partners_page') }}">Partners</a>
+      <a href="{{ url_for('support_page') }}">Support</a>
+      <a href="{{ url_for('aichat') }}">AI Chat</a>
+    </div>
+    <p class="footer-copy">{{ branding.footer_text }}</p>
+  </div>
+</footer>
+
+<!-- Adsterra -->
+{% if settings.ads_enabled %}
+  {% if settings.ads_social_bar %}
+    <script async src="//pl00000000.profitableratecpm.com/00000000.js"></script>
+  {% endif %}
+{% endif %}
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

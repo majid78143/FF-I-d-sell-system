@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Register — {{ branding.site_name }}{% endblock %}
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <img src="{{ branding.logo_url }}" alt="{{ branding.site_name }}" onerror="this.style.display='none'" />
+      <h1 class="auth-title">{{ branding.site_name }}</h1>
+    </div>
+    <h2 class="auth-heading">Create your account</h2>
+    <p class="auth-sub">Join {{ branding.site_name }} and get access to all Free Fire tools.</p>
+
+    <form method="POST" class="auth-form" id="regForm">
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <input type="text" name="username" class="form-input" placeholder="Your username"
+               required minlength="3" value="{{ request.form.username or '' }}" autocomplete="username" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email address</label>
+        <input type="email" name="email" class="form-input" placeholder="you@example.com"
+               required value="{{ request.form.email or '' }}" autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" name="password" id="pw1" class="form-input"
+               placeholder="At least 6 characters" required minlength="6" autocomplete="new-password" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm Password</label>
+        <input type="password" name="confirm_password" id="pw2" class="form-input"
+               placeholder="Repeat your password" required minlength="6" autocomplete="new-password" />
+      </div>
+      <div class="form-pw-strength" id="pwStrength"></div>
+      <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+    </form>
+
+    <div class="auth-footer">
+      <p>Already have an account? <a href="{{ url_for('login') }}">Sign in</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+const pw1=document.getElementById('pw1');
+const pw2=document.getElementById('pw2');
+const str=document.getElementById('pwStrength');
+pw1.addEventListener('input',()=>{
+  const v=pw1.value;
+  let score=0;
+  if(v.length>=6)score++;if(v.length>=10)score++;
+  if(/[A-Z]/.test(v))score++;if(/[0-9]/.test(v))score++;if(/[^A-Za-z0-9]/.test(v))score++;
+  const labels=['','Weak','Fair','Good','Strong','Very Strong'];
+  const cols=['','#e17055','#fdcb6e','#0984e3','#00b894','#6c5ce7'];
+  str.textContent=v?labels[score]:'';str.style.color=v?cols[score]:'';
+});
+document.getElementById('regForm').addEventListener('submit',e=>{
+  if(pw1.value!==pw2.value){e.preventDefault();alert('Passwords do not match.');}
+});
+</script>
+{% endblock %}

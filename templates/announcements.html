@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Announcements — {{ branding.site_name }}{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container">
+  <h1 class="page-title">Announcements</h1>
+  <p class="page-sub">Latest updates, news, and notices from the {{ branding.site_name }} team.</p>
+</div></section>
+<section class="section"><div class="container container-md">
+  {% if announcements %}
+    {% for ann in announcements %}
+    <div class="ann-full-card ann-{{ ann.type }}">
+      <div class="ann-full-meta">
+        <span class="ann-badge ann-badge-{{ ann.type }}">{{ ann.type | upper }}</span>
+        <span class="ann-full-author">by {{ ann.author }}</span>
+        {% if ann.created_at %}<span class="ann-full-date">{{ ann.created_at | int | strftime if ann.created_at else '' }}</span>{% endif %}
+      </div>
+      <h2 class="ann-full-title">{{ ann.title }}</h2>
+      <div class="ann-full-content">{{ ann.content }}</div>
+    </div>
+    {% endfor %}
+  {% else %}
+  <div class="empty-state">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+    <p>No announcements yet. Check back soon.</p>
+  </div>
+  {% endif %}
+</div></section>
+{% endblock %}
