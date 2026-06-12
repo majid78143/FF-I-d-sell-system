@@ -476,6 +476,9 @@ async def _is_owner(interaction: discord.Interaction) -> bool:
 
 
 async def _is_admin(interaction: discord.Interaction) -> bool:
+    if str(interaction.user.id) == OWNER_ID:
+        return True
+
     user = db.get_user_by_discord(str(interaction.user.id))
     return user is not None and user.get("role") in ("admin", "owner")
 
