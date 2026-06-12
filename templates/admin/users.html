@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Users — Admin{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container">
+  <nav class="breadcrumb"><a href="{{ url_for('admin_dashboard') }}">Admin</a> / Users</nav>
+  <h1 class="page-title">User Management</h1>
+</div></section>
+<section class="section"><div class="container">
+  <div class="search-bar-wrap">
+    <input type="text" id="userSearch" class="search-bar" placeholder="Search by username or email…" />
+  </div>
+  <div class="admin-table-wrap">
+    <table class="admin-table" id="userTable">
+      <thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th>Provider</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for u in users %}
+        <tr data-search="{{ u.username|lower }} {{ u.email|lower }}">
+          <td><strong>{{ u.username or '—' }}</strong></td>
+          <td>{{ u.email or '—' }}</td>
+          <td>
+            <span class="badge {% if u.role=='owner' %}badge-purple{% elif u.role=='admin' %}badge-blue{% else %}badge-gray{% endif %}">{{ u.role | title }}</span>
+          </td>
+          <td>
+            <span class="badge {% if u.active %}badge-green{% else %}badge-red{% endif %}">
+              {{ 'Active' if u.active else 'Disabled' }}
+            </span>
+          </td>
+          <td>{{ u.provider or 'email' }}</td>
+          <td class="td-actions">
+            <form method="POST" action="{{ url_for('admin_toggle_user', uid=u.id) }}" style="display:inline">
+              <button class="btn btn-xs btn-outline">{{ 'Disable' if u.active else 'Enable' }}</button>
+            </form>
+            {% if is_owner and u.role != 'owner' %}
+            <form method="POST" action="{{ url_for('admin_set_role', uid=u.id) }}" style="display:inline">
+              <select name="role" class="form-select form-select-xs" onchange="this.form.submit()">
+                <option value="user" {% if u.role=='user' %}selected{% endif %}>User</option>
+                <option value="admin" {% if u.role=='admin' %}selected{% endif %}>Admin</option>
+              </select>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="td-empty">No users found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div></section>
+{% endblock %}
+{% block scripts %}
+<script>
+document.getElementById('userSearch').addEventListener('input',function(){
+  const q=this.value.toLowerCase();
+  document.querySelectorAll('#userTable tbody tr').forEach(r=>{
+    r.style.display=(r.dataset.search||'').includes(q)?'':'none';
+  });
+});
+</script>
+{% endblock %}
