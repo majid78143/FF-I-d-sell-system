@@ -8,13 +8,13 @@ OWNER_PASSWORD = os.environ.get("OWNER_PASSWORD", "changeme123")
 
 # ─── Firebase Config (stored here; all other settings live in Firebase) ───────
 FIREBASE_CONFIG = {
-    "apiKey": "AIzaSyPlaceholderKeyReplaceWithRealKey",
-    "authDomain": "web-massaging-589b7.firebaseapp.com",
-    "databaseURL": "https://web-massaging-589b7-default-rtdb.firebaseio.com",
-    "projectId": "web-massaging-589b7",
-    "storageBucket": "web-massaging-589b7.firebasestorage.app",
-    "messagingSenderId": "000000000000",
-    "appId": "1:000000000000:web:000000000000000000000000",
+    "apiKey": "AIzaSyD3ML9k7RSbeoVze0su8PoE69llfgeqr1k",
+    "authDomain": "codeforge-d3aa2.firebaseapp.com",
+    "databaseURL": "https://codeforge-d3aa2-default-rtdb.firebaseio.com",
+    "projectId": "codeforge-d3aa2",
+    "storageBucket": "https://codeforge-d3aa2-default-rtdb.firebaseio.com",
+    "messagingSenderId": "907268826856",
+    "appId": "1:907268826856:web:aedb8eb1c674bad9ab4b5d",
 }
 
 FIREBASE_DATABASE_URL = FIREBASE_CONFIG["databaseURL"]
